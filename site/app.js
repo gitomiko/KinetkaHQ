@@ -265,8 +265,6 @@ async function pickHref(item) {
 
 function makeCard(item) {
   const live = item.status === "live";
-  const nodeLabel = item.zone ? `Node ${item.zone}` : "";
-  const portLabel = resolveNodePort(item);
   const card = document.createElement(live ? "a" : "article");
   card.className = `card${live ? "" : " card-disabled"}`;
 
@@ -296,7 +294,6 @@ function makeCard(item) {
 
   const statusClass = live ? "tag-live" : "tag-soon";
   const statusText = live ? "LIVE" : "SOON";
-  const actionText = live ? "Open Service" : "Planned, not deployed yet";
 
   card.innerHTML = `
     <div class="card-banner"></div>
@@ -312,13 +309,10 @@ function makeCard(item) {
         <h3>${item.name}</h3>
         <p class="desc">${item.description}</p>
         <div class="tags">
-          ${nodeLabel ? `<span class="tag">${nodeLabel}</span>` : ""}
-          ${portLabel ? `<span class="tag tag-port">Port ${portLabel}</span>` : ""}
           <span class="tag ${statusClass}">${statusText}</span>
         </div>
       </div>
     </div>
-    <div class="card-action">${actionText}</div>
   `;
 
   return card;
@@ -348,7 +342,7 @@ function renderGroups(filter = "") {
   for (const group of appGroups) {
     const matched = group.items.filter((item) => {
       if (!keyword) return true;
-      return [item.name, item.description, item.zone, resolveNodePort(item), group.title, item.status]
+      return [item.name, item.description, group.title, item.status]
         .join(" ")
         .toLowerCase()
         .includes(keyword);

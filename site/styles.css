@@ -502,23 +502,9 @@ button.pill {
   color: var(--soon);
 }
 
-.card-action {
-  border-top: 1px solid var(--card-action-border);
-  font-size: 0.74rem;
-  font-weight: 500;
-  font-family: "DM Mono", "Consolas", monospace;
-  letter-spacing: 0.04em;
-  padding: 0.7rem 0.9rem;
-  color: var(--card-action-ink);
-}
-
 .card-disabled {
   opacity: 0.75;
   cursor: not-allowed;
-}
-
-.card-disabled .card-action {
-  color: var(--card-disabled-action);
 }
 
 .empty {
