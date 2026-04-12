@@ -8,9 +8,9 @@
       name="description"
       content="Kinetika HQ portal template for internal tool launch and navigation."
     />
-    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20260412e" />
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico?v=20260412e" />
-    <link rel="shortcut icon" href="assets/favicon.ico?v=20260412e" />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20260412f" />
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico?v=20260412f" />
+    <link rel="shortcut icon" href="assets/favicon.ico?v=20260412f" />
     <meta
       name="theme-color"
       media="(prefers-color-scheme: light)"
@@ -21,47 +21,59 @@
       media="(prefers-color-scheme: dark)"
       content="#1c1c1b"
     />
-    <link rel="stylesheet" href="styles.css?v=20260412e" />
-    <script defer src="app.js?v=20260412e"></script>
+    <link rel="stylesheet" href="styles.css?v=20260412f" />
+    <script defer src="app.js?v=20260412f"></script>
   </head>
   <body>
-    <div class="orb orb-a"></div>
-    <div class="orb orb-b"></div>
-    <div class="orb orb-c"></div>
-
     <main class="shell">
-      <header class="hero">
-        <p id="eyebrowText" class="eyebrow">KINETIKA CONTROL PLANE</p>
-        <h1 id="titleText">Kinetika HQ</h1>
-        <p id="leadText" class="lead">
-          Configurable launcher template for internal tools, apps, and service navigation.
-        </p>
+      <header class="chrome chrome-top">
+        <span class="chrome-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="chrome-brand" id="topBrand">kinetika hq · portal</span>
+        <span class="chrome-right">
+          <span class="chrome-status"><i class="dot dot-live"></i><span id="liveCount">0</span> live</span>
+          <span id="clock" class="chrome-clock">--:--:--</span>
+          <span id="hostLabel" class="chrome-host"></span>
+          <button id="themeToggle" class="chrome-toggle" type="button">// dark</button>
+        </span>
       </header>
 
-      <section class="toolbar">
-        <label class="search-wrap" for="searchInput">
+      <aside class="sidebar">
+        <div class="brand">
+          <p class="brand-name" id="titleText">Kinetika HQ</p>
+          <p class="brand-eyebrow" id="eyebrowText">KINETIKA CONTROL PLANE</p>
+          <div class="brand-rule"></div>
+        </div>
+
+        <nav class="nav">
+          <p class="nav-label">SECTIONS</p>
+          <ul id="navList" class="nav-list" role="tablist"></ul>
+        </nav>
+
+        <label class="nav-search" for="searchInput">
           <input
             id="searchInput"
             type="search"
             autocomplete="off"
-            placeholder="Search app, group, or note..."
+            placeholder="$ search..."
           />
         </label>
-        <div class="meta">
-          <span id="clock" class="clock">--:--:--</span>
-          <span id="locationPill" class="pill">Template Build</span>
-          <span id="modePill" class="pill pill-soft">Public-safe Demo</span>
-          <button id="themeToggle" class="pill theme-toggle" type="button">
-            Theme: Light
-          </button>
-        </div>
+      </aside>
+
+      <section class="panel" aria-live="polite">
+        <p class="panel-eyebrow" id="panelEyebrow">SECTION</p>
+        <h2 class="panel-title" id="panelTitle">—</h2>
+        <p class="panel-note" id="panelNote"></p>
+        <div id="tiles" class="tiles"></div>
       </section>
 
-      <section id="groups" class="groups" aria-live="polite"></section>
-
-      <footer class="foot">
-        <span id="footerVersion">Public Template 1.0</span>
-        <span>Shortcuts: Ctrl/Cmd + K to focus search</span>
+      <footer class="chrome chrome-bot">
+        <span class="chrome-left">
+          <i class="dot dot-live"></i>
+          <span>live</span>
+          <span class="chrome-sep">·</span>
+          <span id="modePill">HQ Portal</span>
+        </span>
+        <span id="footerVersion" class="chrome-right-text">kinetika hq v1.0</span>
       </footer>
     </main>
   </body>

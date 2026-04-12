@@ -103,17 +103,24 @@ let appGroups = DEFAULT_PORTAL_CONFIG.groups;
 let PRIVATE_SUFFIX = DEFAULT_PORTAL_CONFIG.routing.privateSuffix;
 let PUBLIC_SUFFIX = DEFAULT_PORTAL_CONFIG.routing.publicSuffix;
 
-const groupsHost = document.getElementById("groups");
+const navList = document.getElementById("navList");
+const tilesHost = document.getElementById("tiles");
+const panelEyebrow = document.getElementById("panelEyebrow");
+const panelTitle = document.getElementById("panelTitle");
+const panelNote = document.getElementById("panelNote");
 const searchInput = document.getElementById("searchInput");
 const clock = document.getElementById("clock");
 const themeToggle = document.getElementById("themeToggle");
 const eyebrowText = document.getElementById("eyebrowText");
 const titleText = document.getElementById("titleText");
-const leadText = document.getElementById("leadText");
-const locationPill = document.getElementById("locationPill");
 const modePill = document.getElementById("modePill");
 const footerVersion = document.getElementById("footerVersion");
+const liveCount = document.getElementById("liveCount");
+const hostLabel = document.getElementById("hostLabel");
 const descriptionMeta = document.querySelector('meta[name="description"]');
+
+let selectedGroupIndex = 0;
+let searchQuery = "";
 const THEME_STORAGE_KEY = "kinetika-hq-theme";
 const darkMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
@@ -130,10 +137,9 @@ function loadTheme() {
 function updateThemeToggle(theme) {
   if (!themeToggle) return;
   const nextTheme = theme === "dark" ? "light" : "dark";
-  const nextLabel = nextTheme === "dark" ? "Dark" : "Light";
-  themeToggle.textContent = `Theme: ${theme === "dark" ? "Dark" : "Light"}`;
-  themeToggle.setAttribute("aria-label", `Switch to ${nextLabel} mode`);
-  themeToggle.title = `Switch to ${nextLabel} mode`;
+  themeToggle.textContent = `// ${theme}`;
+  themeToggle.setAttribute("aria-label", `Switch to ${nextTheme} mode`);
+  themeToggle.title = `Switch to ${nextTheme} mode`;
 }
 
 function applyTheme(theme) {
@@ -151,13 +157,11 @@ function toggleTheme() {
 
 function formatNow() {
   const now = new Date();
-  return new Intl.DateTimeFormat("id-ID", {
+  return new Intl.DateTimeFormat("en-GB", {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
+    hour12: false,
   }).format(now);
 }
 
@@ -274,20 +278,20 @@ function safeText(text) {
     .trim();
 }
 
-function makeCard(item) {
+function makeTile(item, groupTitle) {
   const live = item.status === "live";
-  const card = document.createElement(live ? "a" : "article");
-  card.className = `card${live ? "" : " card-disabled"}`;
+  const tile = document.createElement(live ? "a" : "article");
+  tile.className = `tile${live ? "" : " tile-disabled"}`;
 
   if (live) {
     const targets = resolveTargets(item);
     const defaultHref = targets[0] || item.href || "#";
 
-    card.href = defaultHref;
-    card.target = "_blank";
-    card.rel = "noopener noreferrer";
+    tile.href = defaultHref;
+    tile.target = "_blank";
+    tile.rel = "noopener noreferrer";
 
-    card.addEventListener("click", (event) => {
+    tile.addEventListener("click", (event) => {
       event.preventDefault();
       const popup = window.open("about:blank", "_blank");
       if (popup) popup.opener = null;
@@ -303,101 +307,136 @@ function makeCard(item) {
     });
   }
 
-  const statusClass = live ? "tag-live" : "tag-soon";
-  const statusText = live ? "LIVE" : "SOON";
+  const statusClass = live ? "tile-status-live" : "tile-status-soon";
+  const statusText = live ? "live" : "soon";
+  const dotClass = live ? "dot-live" : "dot-soon";
+  const iconHtml = item.logo
+    ? `<img class="tile-icon" src="${item.logo}" alt="" loading="lazy" referrerpolicy="no-referrer" />`
+    : "";
 
-  card.innerHTML = `
-    <div class="card-banner"></div>
-    <div class="card-main">
-      <div class="mark${item.logo ? "" : " mark-fallback"}" data-mark="${item.mark}">
-        ${
-          item.logo
-            ? `<img class="mark-icon" src="${item.logo}" alt="${item.name} logo" loading="lazy" referrerpolicy="no-referrer" />`
-            : item.mark
-        }
-      </div>
-      <div>
-        <h3>${safeText(item.name)}</h3>
-        <p class="desc">${safeText(item.description)}</p>
-        <div class="tags">
-          <span class="tag ${statusClass}">${statusText}</span>
-        </div>
-      </div>
+  tile.innerHTML = `
+    <p class="tile-label">${safeText(groupTitle)}</p>
+    <h3 class="tile-name">${safeText(item.name)}</h3>
+    <p class="tile-desc">${safeText(item.description)}</p>
+    <div class="tile-foot">
+      <span class="tile-status ${statusClass}"><i class="dot ${dotClass}"></i>${statusText}</span>
+      ${iconHtml}
     </div>
   `;
 
-  return card;
+  const iconEl = tile.querySelector(".tile-icon");
+  if (iconEl) {
+    iconEl.addEventListener("error", () => iconEl.remove(), { once: true });
+  }
+
+  return tile;
 }
 
-function wireMarkFallbacks(root = groupsHost) {
-  root.querySelectorAll(".mark-icon").forEach((img) => {
-    img.addEventListener(
-      "error",
-      () => {
-        const holder = img.closest(".mark");
-        if (!holder) return;
-        holder.classList.add("mark-fallback");
-        holder.textContent = holder.dataset.mark || "";
-      },
-      { once: true },
+function itemMatches(item, group, keyword) {
+  if (!keyword) return true;
+  return [
+    safeText(item.name),
+    safeText(item.description),
+    safeText(group.title),
+    item.status,
+  ]
+    .join(" ")
+    .toLowerCase()
+    .includes(keyword);
+}
+
+function renderSidebar() {
+  if (!navList) return;
+  navList.innerHTML = "";
+
+  appGroups.forEach((group, i) => {
+    const li = document.createElement("li");
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "nav-item";
+    btn.setAttribute("role", "tab");
+    btn.setAttribute(
+      "aria-selected",
+      !searchQuery && i === selectedGroupIndex ? "true" : "false",
     );
+    btn.disabled = Boolean(searchQuery);
+    btn.addEventListener("click", () => selectGroup(i));
+
+    const title = document.createElement("span");
+    title.textContent = safeText(group.title) || "—";
+
+    const count = document.createElement("span");
+    count.className = "nav-count";
+    count.textContent = String(group.items.length);
+
+    btn.appendChild(title);
+    btn.appendChild(count);
+    li.appendChild(btn);
+    navList.appendChild(li);
   });
 }
 
-function renderGroups(filter = "") {
-  const keyword = filter.trim().toLowerCase();
-  groupsHost.innerHTML = "";
+function selectGroup(i) {
+  selectedGroupIndex = i;
+  renderSidebar();
+  renderPanel();
+}
 
-  let totalVisible = 0;
+function renderPanel() {
+  if (!tilesHost) return;
+  tilesHost.innerHTML = "";
+  const keyword = searchQuery.trim().toLowerCase();
 
-  for (const group of appGroups) {
-    const matched = group.items.filter((item) => {
-      if (!keyword) return true;
-      return [
-        safeText(item.name),
-        safeText(item.description),
-        safeText(group.title),
-        item.status,
-      ]
-        .join(" ")
-        .toLowerCase()
-        .includes(keyword);
+  if (keyword) {
+    const matches = [];
+    let sectionsHit = 0;
+    for (const group of appGroups) {
+      const hits = group.items.filter((item) => itemMatches(item, group, keyword));
+      if (hits.length > 0) sectionsHit += 1;
+      hits.forEach((item) => matches.push({ item, groupTitle: group.title }));
+    }
+
+    if (panelEyebrow) panelEyebrow.textContent = "RESULTS";
+    if (panelTitle) panelTitle.textContent = `Search: ${keyword}`;
+    if (panelNote) {
+      panelNote.textContent = matches.length
+        ? `${matches.length} match${matches.length === 1 ? "" : "es"} across ${sectionsHit} section${sectionsHit === 1 ? "" : "s"}.`
+        : "";
+    }
+
+    if (matches.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "empty";
+      empty.textContent = "no results.";
+      tilesHost.appendChild(empty);
+      return;
+    }
+
+    matches.forEach(({ item, groupTitle }) => {
+      tilesHost.appendChild(makeTile(item, groupTitle));
     });
-
-    if (matched.length === 0) continue;
-
-    totalVisible += matched.length;
-
-    const wrapper = document.createElement("section");
-    wrapper.className = "group";
-
-    const head = document.createElement("div");
-    head.className = "group-head";
-    head.innerHTML = `
-      <div>
-        <h2 class="group-title">${safeText(group.title)}</h2>
-        <p class="group-note">${safeText(group.note)}</p>
-      </div>
-      <span class="group-count">${matched.length} apps</span>
-    `;
-
-    const cards = document.createElement("div");
-    cards.className = "cards";
-    matched.forEach((item) => cards.appendChild(makeCard(item)));
-
-    wrapper.appendChild(head);
-    wrapper.appendChild(cards);
-    groupsHost.appendChild(wrapper);
+    return;
   }
 
-  if (totalVisible === 0) {
-    const empty = document.createElement("div");
-    empty.className = "empty";
-    empty.textContent = "No apps matched this search.";
-    groupsHost.appendChild(empty);
-  }
+  const group = appGroups[selectedGroupIndex] || appGroups[0];
+  if (!group) return;
 
-  wireMarkFallbacks(groupsHost);
+  if (panelEyebrow) panelEyebrow.textContent = "SECTION";
+  if (panelTitle) panelTitle.textContent = safeText(group.title) || "—";
+  if (panelNote) panelNote.textContent = safeText(group.note) || "";
+
+  group.items.forEach((item) => {
+    tilesHost.appendChild(makeTile(item, group.title));
+  });
+}
+
+function updateLiveCount() {
+  if (!liveCount) return;
+  const total = appGroups.reduce(
+    (sum, g) => sum + g.items.filter((it) => it.status === "live").length,
+    0,
+  );
+  liveCount.textContent = String(total);
 }
 
 function tickClock() {
@@ -412,19 +451,17 @@ function applyShell(shell) {
       shell.description || DEFAULT_PORTAL_CONFIG.shell.description,
     );
   }
-  const setOrHide = (el, value) => {
-    if (!el) return;
-    const clean = safeText(value);
-    el.textContent = clean;
-    el.hidden = !clean;
-  };
-
   if (eyebrowText) eyebrowText.textContent = safeText(shell.eyebrow);
   if (titleText) titleText.textContent = safeText(shell.title);
-  if (leadText) leadText.textContent = safeText(shell.lead);
-  setOrHide(locationPill, shell.locationPill);
-  setOrHide(modePill, shell.modePill);
+  if (modePill) {
+    const clean = safeText(shell.modePill);
+    modePill.textContent = clean;
+    modePill.hidden = !clean;
+  }
   if (footerVersion) footerVersion.textContent = safeText(shell.versionLabel);
+  if (hostLabel && typeof window !== "undefined") {
+    hostLabel.textContent = window.location.hostname;
+  }
 }
 
 function normalizeConfig(override) {
@@ -451,7 +488,9 @@ function loadLocalConfig() {
 }
 
 searchInput.addEventListener("input", (event) => {
-  renderGroups(event.target.value);
+  searchQuery = event.target.value || "";
+  renderSidebar();
+  renderPanel();
 });
 
 document.addEventListener("keydown", (event) => {
@@ -488,7 +527,9 @@ async function bootstrap() {
 
   applyShell(config.shell);
   applyTheme(loadTheme());
-  renderGroups();
+  updateLiveCount();
+  renderSidebar();
+  renderPanel();
   tickClock();
   setInterval(tickClock, 1000);
 }
