@@ -263,6 +263,17 @@ async function pickHref(item) {
   return targets[0];
 }
 
+const INFRA_LEAK_RE = /\bnode\s*\d+\b|\b\d{1,3}(?:\.\d{1,3}){3}(?::\d+)?\b/gi;
+
+function safeText(text) {
+  if (typeof text !== "string") return text;
+  return text
+    .replace(INFRA_LEAK_RE, "")
+    .replace(/\s{2,}/g, " ")
+    .replace(/^[\s\-–—,.:]+/, "")
+    .trim();
+}
+
 function makeCard(item) {
   const live = item.status === "live";
   const card = document.createElement(live ? "a" : "article");
@@ -306,8 +317,8 @@ function makeCard(item) {
         }
       </div>
       <div>
-        <h3>${item.name}</h3>
-        <p class="desc">${item.description}</p>
+        <h3>${safeText(item.name)}</h3>
+        <p class="desc">${safeText(item.description)}</p>
         <div class="tags">
           <span class="tag ${statusClass}">${statusText}</span>
         </div>
@@ -342,7 +353,12 @@ function renderGroups(filter = "") {
   for (const group of appGroups) {
     const matched = group.items.filter((item) => {
       if (!keyword) return true;
-      return [item.name, item.description, group.title, item.status]
+      return [
+        safeText(item.name),
+        safeText(item.description),
+        safeText(group.title),
+        item.status,
+      ]
         .join(" ")
         .toLowerCase()
         .includes(keyword);
@@ -359,8 +375,8 @@ function renderGroups(filter = "") {
     head.className = "group-head";
     head.innerHTML = `
       <div>
-        <h2 class="group-title">${group.title}</h2>
-        <p class="group-note">${group.note}</p>
+        <h2 class="group-title">${safeText(group.title)}</h2>
+        <p class="group-note">${safeText(group.note)}</p>
       </div>
       <span class="group-count">${matched.length} apps</span>
     `;
@@ -396,12 +412,19 @@ function applyShell(shell) {
       shell.description || DEFAULT_PORTAL_CONFIG.shell.description,
     );
   }
-  if (eyebrowText) eyebrowText.textContent = shell.eyebrow;
-  if (titleText) titleText.textContent = shell.title;
-  if (leadText) leadText.textContent = shell.lead;
-  if (locationPill) locationPill.textContent = shell.locationPill;
-  if (modePill) modePill.textContent = shell.modePill;
-  if (footerVersion) footerVersion.textContent = shell.versionLabel;
+  const setOrHide = (el, value) => {
+    if (!el) return;
+    const clean = safeText(value);
+    el.textContent = clean;
+    el.hidden = !clean;
+  };
+
+  if (eyebrowText) eyebrowText.textContent = safeText(shell.eyebrow);
+  if (titleText) titleText.textContent = safeText(shell.title);
+  if (leadText) leadText.textContent = safeText(shell.lead);
+  setOrHide(locationPill, shell.locationPill);
+  setOrHide(modePill, shell.modePill);
+  if (footerVersion) footerVersion.textContent = safeText(shell.versionLabel);
 }
 
 function normalizeConfig(override) {
