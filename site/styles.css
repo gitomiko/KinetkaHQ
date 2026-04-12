@@ -1,105 +1,169 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Space+Grotesk:wght@500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Syne:wght@400;500;700;800&family=DM+Mono:wght@300;400;500&display=swap");
+
+/* ─── ir0nm0nk Design System ─────────────────────────────────────
+   Iron that rusts. Copper that oxidizes. Honest by material.
+   Light mode: Linen / Cloud Dancer base
+   Dark mode:  Warm-dark Forge / Void base (default intent)
+──────────────────────────────────────────────────────────────── */
 
 :root {
   color-scheme: light;
-  --bg-0: #f4efe7;
-  --bg-1: #ece2d3;
-  --bg-glow-a: #ffe5be;
-  --bg-glow-b: #c3f0e2;
-  --panel: rgba(255, 255, 255, 0.74);
-  --panel-strong: rgba(255, 255, 255, 0.9);
-  --ink: #1f2a33;
-  --ink-soft: #4a5a65;
-  --line: rgba(33, 48, 56, 0.14);
-  --accent-a: #e06b29;
-  --accent-b: #22786a;
-  --live: #0f7f6d;
-  --soon: #8a5a16;
-  --orb-a: #f28a3e;
-  --orb-b: #38a88f;
-  --orb-c: #f0bb5f;
-  --input-border: rgba(34, 120, 106, 0.22);
-  --input-bg: rgba(255, 255, 255, 0.85);
-  --input-placeholder: #758692;
-  --input-focus-border: rgba(34, 120, 106, 0.55);
-  --input-focus-ring: rgba(34, 120, 106, 0.16);
-  --clock: #1e3f4a;
-  --pill-border: rgba(33, 48, 56, 0.2);
-  --pill-bg: rgba(255, 255, 255, 0.78);
-  --pill-soft-border: rgba(34, 120, 106, 0.28);
-  --group-divider: rgba(33, 48, 56, 0.09);
-  --group-count: #49626d;
-  --card-border: rgba(33, 48, 56, 0.12);
-  --card-hover-border: rgba(34, 120, 106, 0.42);
-  --card-hover-shadow: 0 10px 24px rgba(18, 31, 36, 0.11);
-  --mark-border: rgba(33, 48, 56, 0.16);
-  --mark-bg: #ffffff;
-  --mark-fallback-ink: #ffffff;
-  --mark-fallback-a: #d9652a;
-  --mark-fallback-b: #1d8472;
-  --tag-border: rgba(24, 37, 43, 0.22);
-  --tag-bg: rgba(255, 255, 255, 0.8);
-  --tag-live-border: rgba(15, 127, 109, 0.35);
-  --tag-soon-border: rgba(138, 90, 22, 0.34);
-  --card-action-border: rgba(33, 48, 56, 0.1);
-  --card-action-ink: #21424c;
-  --card-disabled-action: #6e4f20;
-  --empty-border: rgba(33, 48, 56, 0.3);
-  --empty-bg: rgba(255, 255, 255, 0.68);
-  --empty-ink: #50616d;
-  --foot-ink: #4e636f;
-  --shadow: 0 18px 45px rgba(20, 29, 33, 0.15);
+
+  /* Backgrounds */
+  --bg-0: #f5f1eb;            /* Linen */
+  --bg-1: #ede8e0;            /* Cloud Dancer */
+  --bg-glow-a: #e8dccc;       /* warm patina tint */
+  --bg-glow-b: #d4e4dc;       /* cool verdigris tint */
+
+  /* Panels */
+  --panel: rgba(245, 241, 235, 0.84);
+  --panel-strong: rgba(255, 255, 255, 0.92);
+
+  /* Text */
+  --ink: #1c1c1b;
+  --ink-soft: #5a5a58;
+  --line: rgba(28, 28, 27, 0.12);
+
+  /* Accents — oxidized copper */
+  --accent-a: #8c6a3a;        /* Patina */
+  --accent-b: #5a7a6a;        /* Verdigris */
+  --live: #3a6a5a;            /* Verdigris dark */
+  --soon: #7a5228;            /* Patina dark */
+
+  /* Orbs */
+  --orb-a: #c8a870;
+  --orb-b: #7aa48a;
+  --orb-c: #c8c4be;
+
+  /* Inputs */
+  --input-border: rgba(90, 122, 106, 0.25);
+  --input-bg: rgba(255, 255, 255, 0.88);
+  --input-placeholder: #8a8680;   /* Iron Mist */
+  --input-focus-border: rgba(90, 122, 106, 0.55);
+  --input-focus-ring: rgba(90, 122, 106, 0.16);
+
+  /* Toolbar meta */
+  --clock: #4a4a48;              /* Graphite */
+  --pill-border: rgba(28, 28, 27, 0.18);
+  --pill-bg: rgba(255, 255, 255, 0.82);
+  --pill-soft-border: rgba(90, 122, 106, 0.30);
+
+  /* Groups */
+  --group-divider: rgba(28, 28, 27, 0.08);
+  --group-count: #8a8680;
+
+  /* Cards */
+  --card-border: rgba(28, 28, 27, 0.10);
+  --card-hover-border: rgba(140, 106, 58, 0.45);
+  --card-hover-shadow: 0 10px 24px rgba(28, 28, 27, 0.12);
+
+  /* Mark / icon */
+  --mark-border: rgba(28, 28, 27, 0.14);
+  --mark-bg: #ede8e0;
+  --mark-fallback-ink: #ede8e0;
+  --mark-fallback-a: #7a5228;
+  --mark-fallback-b: #3a6a5a;
+
+  /* Tags */
+  --tag-border: rgba(28, 28, 27, 0.18);
+  --tag-bg: rgba(245, 241, 235, 0.92);
+  --tag-live-border: rgba(90, 122, 106, 0.38);
+  --tag-soon-border: rgba(140, 106, 58, 0.38);
+
+  /* Card actions */
+  --card-action-border: rgba(28, 28, 27, 0.08);
+  --card-action-ink: #4a4a48;
+  --card-disabled-action: #8c6a3a;
+
+  /* Empty state */
+  --empty-border: rgba(28, 28, 27, 0.28);
+  --empty-bg: rgba(245, 241, 235, 0.75);
+  --empty-ink: #8a8680;
+
+  /* Footer */
+  --foot-ink: #6a6a67;
+
+  --shadow: 0 18px 45px rgba(28, 28, 27, 0.12);
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg-0: #08101c;
-  --bg-1: #0f1f34;
-  --bg-glow-a: #1b4673;
-  --bg-glow-b: #0f3252;
-  --panel: rgba(10, 21, 36, 0.78);
-  --panel-strong: rgba(13, 27, 46, 0.92);
-  --ink: #d3e6f7;
-  --ink-soft: #95aec3;
-  --line: rgba(109, 155, 193, 0.26);
-  --accent-a: #8ca4bf;
-  --accent-b: #12a3ff;
-  --live: #45c0ff;
-  --soon: #d1a472;
-  --orb-a: #1a4f86;
-  --orb-b: #0d75c4;
-  --orb-c: #305f90;
-  --input-border: rgba(49, 137, 205, 0.45);
-  --input-bg: rgba(8, 20, 35, 0.82);
-  --input-placeholder: #7f9ab2;
-  --input-focus-border: rgba(74, 167, 241, 0.82);
-  --input-focus-ring: rgba(40, 138, 220, 0.35);
-  --clock: #8dc8f2;
-  --pill-border: rgba(113, 150, 184, 0.4);
-  --pill-bg: rgba(12, 26, 43, 0.8);
-  --pill-soft-border: rgba(64, 173, 255, 0.45);
-  --group-divider: rgba(116, 150, 181, 0.28);
-  --group-count: #8facc5;
-  --card-border: rgba(113, 150, 184, 0.3);
-  --card-hover-border: rgba(72, 171, 255, 0.72);
-  --card-hover-shadow: 0 14px 34px rgba(2, 9, 16, 0.55);
-  --mark-border: rgba(120, 156, 189, 0.4);
-  --mark-bg: #0f2238;
-  --mark-fallback-ink: #d9ecff;
-  --mark-fallback-a: #7f95ad;
-  --mark-fallback-b: #0d95ea;
-  --tag-border: rgba(115, 155, 190, 0.38);
-  --tag-bg: rgba(13, 27, 45, 0.82);
-  --tag-live-border: rgba(67, 191, 255, 0.58);
-  --tag-soon-border: rgba(208, 165, 106, 0.45);
-  --card-action-border: rgba(114, 150, 183, 0.28);
-  --card-action-ink: #a9c7dd;
-  --card-disabled-action: #c1a57f;
-  --empty-border: rgba(117, 154, 189, 0.5);
-  --empty-bg: rgba(11, 24, 40, 0.65);
-  --empty-ink: #9ab5cc;
-  --foot-ink: #88a4bb;
-  --shadow: 0 22px 50px rgba(1, 8, 15, 0.6);
+
+  /* Backgrounds */
+  --bg-0: #1c1c1b;            /* Warm-dark base */
+  --bg-1: #161615;            /* Void */
+  --bg-glow-a: #2a1c10;       /* Patina shadow */
+  --bg-glow-b: #101a18;       /* Verdigris shadow */
+
+  /* Panels */
+  --panel: rgba(28, 28, 27, 0.82);
+  --panel-strong: rgba(22, 22, 21, 0.95);
+
+  /* Text */
+  --ink: #ede8e0;              /* Cloud Dancer */
+  --ink-soft: #8a8680;        /* Iron Mist */
+  --line: rgba(200, 196, 190, 0.12);
+
+  /* Accents — same across modes: oxidized copper doesn't change with light */
+  --accent-a: #8c6a3a;        /* Patina */
+  --accent-b: #5a7a6a;        /* Verdigris */
+  --live: #7aa48a;            /* Verdigris light */
+  --soon: #b8905a;            /* Patina light */
+
+  /* Orbs — very subtle warmth */
+  --orb-a: #4a2c18;
+  --orb-b: #1a3028;
+  --orb-c: #3a3632;
+
+  /* Inputs */
+  --input-border: rgba(90, 122, 106, 0.38);
+  --input-bg: rgba(22, 22, 21, 0.85);
+  --input-placeholder: #6a6a67;
+  --input-focus-border: rgba(140, 106, 58, 0.75);
+  --input-focus-ring: rgba(140, 106, 58, 0.22);
+
+  /* Toolbar meta */
+  --clock: #8a8680;            /* Iron Mist */
+  --pill-border: rgba(200, 196, 190, 0.18);
+  --pill-bg: rgba(22, 22, 21, 0.82);
+  --pill-soft-border: rgba(90, 122, 106, 0.40);
+
+  /* Groups */
+  --group-divider: rgba(200, 196, 190, 0.08);
+  --group-count: #6a6a67;
+
+  /* Cards */
+  --card-border: #252523;      /* Forge */
+  --card-hover-border: rgba(140, 106, 58, 0.65);
+  --card-hover-shadow: 0 14px 34px rgba(10, 10, 9, 0.55);
+
+  /* Mark / icon */
+  --mark-border: #252523;
+  --mark-bg: #252523;          /* Forge */
+  --mark-fallback-ink: #ede8e0;
+  --mark-fallback-a: #8c6a3a;
+  --mark-fallback-b: #5a7a6a;
+
+  /* Tags */
+  --tag-border: rgba(200, 196, 190, 0.14);
+  --tag-bg: rgba(22, 22, 21, 0.85);
+  --tag-live-border: rgba(90, 122, 106, 0.55);
+  --tag-soon-border: rgba(140, 106, 58, 0.48);
+
+  /* Card actions */
+  --card-action-border: #252523;
+  --card-action-ink: #c8c4be;  /* Pale Alloy */
+  --card-disabled-action: #8c6a3a;
+
+  /* Empty state */
+  --empty-border: rgba(200, 196, 190, 0.28);
+  --empty-bg: rgba(22, 22, 21, 0.68);
+  --empty-ink: #6a6a67;
+
+  /* Footer */
+  --foot-ink: #6a6a67;
+
+  --shadow: 0 22px 50px rgba(10, 10, 9, 0.65);
 }
 
 * {
@@ -113,7 +177,7 @@ body {
 }
 
 body {
-  font-family: "Manrope", "Trebuchet MS", "Segoe UI", sans-serif;
+  font-family: "Syne", "Trebuchet MS", "Segoe UI", sans-serif;
   color: var(--ink);
   background:
     radial-gradient(circle at 20% 20%, var(--bg-glow-a) 0%, transparent 40%),
@@ -167,16 +231,19 @@ body {
 
 .eyebrow {
   margin: 0 0 0.5rem;
-  font-size: 0.74rem;
-  letter-spacing: 0.14em;
-  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  font-weight: 500;
+  font-family: "DM Mono", "Consolas", monospace;
   color: var(--accent-b);
 }
 
 h1 {
   margin: 0;
-  font-family: "Space Grotesk", "Segoe UI", sans-serif;
-  font-size: clamp(1.9rem, 4vw, 3rem);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+  font-weight: 300;
+  font-style: italic;
   line-height: 1.05;
 }
 
@@ -184,6 +251,7 @@ h1 {
   margin: 0.7rem 0 0;
   color: var(--ink-soft);
   max-width: 66ch;
+  font-size: 0.95rem;
 }
 
 .toolbar {
@@ -191,7 +259,7 @@ h1 {
   padding: 0.9rem 1rem;
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: 14px;
   backdrop-filter: blur(6px);
   box-shadow: var(--shadow);
   display: flex;
@@ -208,9 +276,9 @@ h1 {
 input[type="search"] {
   width: 100%;
   border: 1px solid var(--input-border);
-  border-radius: 12px;
+  border-radius: 8px;
   font: inherit;
-  font-size: 0.98rem;
+  font-size: 0.95rem;
   color: var(--ink);
   background: var(--input-bg);
   padding: 0.72rem 0.86rem;
@@ -235,19 +303,21 @@ input[type="search"]:focus {
 }
 
 .clock {
-  font-family: "Space Grotesk", "Consolas", monospace;
-  font-weight: 700;
+  font-family: "DM Mono", "Consolas", monospace;
+  font-weight: 400;
   color: var(--clock);
-  font-size: 0.92rem;
+  font-size: 0.88rem;
 }
 
 .pill {
   border: 1px solid var(--pill-border);
   padding: 0.34rem 0.54rem;
-  border-radius: 999px;
-  font-size: 0.76rem;
-  font-weight: 700;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  font-family: "DM Mono", "Consolas", monospace;
   background: var(--pill-bg);
+  letter-spacing: 0.04em;
 }
 
 button.pill {
@@ -283,7 +353,7 @@ button.pill {
 .group {
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: 10px;
   box-shadow: var(--shadow);
   overflow: hidden;
   animation: rise 420ms ease both;
@@ -300,21 +370,24 @@ button.pill {
 
 .group-title {
   margin: 0;
-  font-family: "Space Grotesk", "Segoe UI", sans-serif;
-  font-size: 1.12rem;
+  font-family: "Syne", "Segoe UI", sans-serif;
+  font-size: 1.08rem;
+  font-weight: 700;
 }
 
 .group-note {
   margin: 0.2rem 0 0;
-  font-size: 0.86rem;
+  font-size: 0.84rem;
   color: var(--ink-soft);
 }
 
 .group-count {
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.72rem;
+  font-weight: 400;
+  font-family: "DM Mono", "Consolas", monospace;
   color: var(--group-count);
   white-space: nowrap;
+  letter-spacing: 0.04em;
 }
 
 .cards {
@@ -328,7 +401,7 @@ button.pill {
   display: flex;
   flex-direction: column;
   border: 1px solid var(--card-border);
-  border-radius: 14px;
+  border-radius: 8px;
   min-height: 156px;
   background: var(--panel-strong);
   color: inherit;
@@ -344,7 +417,7 @@ button.pill {
 }
 
 .card-banner {
-  height: 5px;
+  height: 2px;
   background: linear-gradient(90deg, var(--accent-a), var(--accent-b));
 }
 
@@ -359,7 +432,7 @@ button.pill {
 .mark {
   width: 38px;
   height: 38px;
-  border-radius: 11px;
+  border-radius: 6px;
   display: block;
   overflow: hidden;
   border: 1px solid var(--mark-border);
@@ -377,8 +450,9 @@ button.pill {
 .mark-fallback {
   display: grid;
   place-content: center;
-  font-weight: 800;
-  font-size: 0.78rem;
+  font-weight: 700;
+  font-size: 0.72rem;
+  font-family: "DM Mono", "Consolas", monospace;
   color: var(--mark-fallback-ink);
   border-color: transparent;
   background: linear-gradient(130deg, var(--mark-fallback-a), var(--mark-fallback-b));
@@ -386,12 +460,13 @@ button.pill {
 
 .card h3 {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.98rem;
+  font-weight: 700;
 }
 
 .desc {
   margin: 0.24rem 0 0;
-  font-size: 0.85rem;
+  font-size: 0.83rem;
   color: var(--ink-soft);
 }
 
@@ -403,17 +478,18 @@ button.pill {
 }
 
 .tag {
-  font-size: 0.72rem;
-  font-weight: 700;
-  border-radius: 999px;
-  padding: 0.2rem 0.46rem;
+  font-size: 0.68rem;
+  font-weight: 500;
+  border-radius: 3px;
+  padding: 0.18rem 0.42rem;
   border: 1px solid var(--tag-border);
   background: var(--tag-bg);
+  letter-spacing: 0.02em;
 }
 
 .tag-port {
-  font-family: ui-monospace, "SFMono-Regular", "Consolas", monospace;
-  letter-spacing: 0.02em;
+  font-family: "DM Mono", ui-monospace, "Consolas", monospace;
+  letter-spacing: 0.04em;
 }
 
 .tag-live {
@@ -428,8 +504,10 @@ button.pill {
 
 .card-action {
   border-top: 1px solid var(--card-action-border);
-  font-size: 0.78rem;
-  font-weight: 700;
+  font-size: 0.74rem;
+  font-weight: 500;
+  font-family: "DM Mono", "Consolas", monospace;
+  letter-spacing: 0.04em;
   padding: 0.7rem 0.9rem;
   color: var(--card-action-ink);
 }
@@ -445,7 +523,7 @@ button.pill {
 
 .empty {
   border: 1px dashed var(--empty-border);
-  border-radius: 12px;
+  border-radius: 8px;
   background: var(--empty-bg);
   padding: 1rem;
   color: var(--empty-ink);
@@ -455,7 +533,9 @@ button.pill {
   margin-top: 1rem;
   padding: 0.6rem 0.2rem 1rem;
   color: var(--foot-ink);
-  font-size: 0.76rem;
+  font-size: 0.72rem;
+  font-family: "DM Mono", "Consolas", monospace;
+  letter-spacing: 0.04em;
   display: flex;
   gap: 0.8rem;
   justify-content: space-between;
@@ -484,7 +564,7 @@ button.pill {
   }
 
   .toolbar {
-    border-radius: 16px;
+    border-radius: 10px;
     padding: 0.75rem;
   }
 
