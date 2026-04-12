@@ -418,7 +418,7 @@ button.pill {
 
 .card-banner {
   height: 2px;
-  background: linear-gradient(90deg, var(--accent-a), var(--accent-b));
+  background: var(--accent-a);
 }
 
 .card-main {
