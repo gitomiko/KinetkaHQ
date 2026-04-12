@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kinetika HQ</title>
+    <meta
+      name="description"
+      content="Kinetika HQ portal template for internal tool launch and navigation."
+    />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20260412a" />
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico?v=20260412a" />
+    <link rel="shortcut icon" href="assets/favicon.ico?v=20260412a" />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="#f4efe7"
+    />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="#0a1524"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260412a" />
+    <script defer src="app.js?v=20260412a"></script>
+  </head>
+  <body>
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="orb orb-c"></div>
+
+    <main class="shell">
+      <header class="hero">
+        <p id="eyebrowText" class="eyebrow">KINETIKA CONTROL PLANE</p>
+        <h1 id="titleText">Kinetika HQ</h1>
+        <p id="leadText" class="lead">
+          Configurable launcher template for internal tools, apps, and service navigation.
+        </p>
+      </header>
+
+      <section class="toolbar">
+        <label class="search-wrap" for="searchInput">
+          <input
+            id="searchInput"
+            type="search"
+            autocomplete="off"
+            placeholder="Search app, group, or note..."
+          />
+        </label>
+        <div class="meta">
+          <span id="clock" class="clock">--:--:--</span>
+          <span id="locationPill" class="pill">Template Build</span>
+          <span id="modePill" class="pill pill-soft">Public-safe Demo</span>
+          <button id="themeToggle" class="pill theme-toggle" type="button">
+            Theme: Light
+          </button>
+        </div>
+      </section>
+
+      <section id="groups" class="groups" aria-live="polite"></section>
+
+      <footer class="foot">
+        <span id="footerVersion">Public Template 1.0</span>
+        <span>Shortcuts: Ctrl/Cmd + K to focus search</span>
+      </footer>
+    </main>
+  </body>
+</html>

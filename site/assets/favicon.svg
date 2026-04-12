@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Kinetika HQ">
+  <defs>
+    <linearGradient id="steel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d6e2f0" />
+      <stop offset="42%" stop-color="#8ea1b5" />
+      <stop offset="100%" stop-color="#4a5f77" />
+    </linearGradient>
+    <linearGradient id="steelDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7e91a7" />
+      <stop offset="45%" stop-color="#435a72" />
+      <stop offset="100%" stop-color="#24384f" />
+    </linearGradient>
+    <linearGradient id="core" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a314c" />
+      <stop offset="100%" stop-color="#0a1627" />
+    </linearGradient>
+    <linearGradient id="kMetal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e0eaf5" />
+      <stop offset="40%" stop-color="#a7b8cb" />
+      <stop offset="100%" stop-color="#5e748b" />
+    </linearGradient>
+    <linearGradient id="edgeBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0b85d8" />
+      <stop offset="100%" stop-color="#38c5ff" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#030913" flood-opacity="0.6" />
+    </filter>
+  </defs>
+
+  <rect width="256" height="256" fill="#081524" />
+
+  <g filter="url(#shadow)">
+    <g fill="url(#steelDark)" stroke="#9fb2c7" stroke-width="2">
+      <g id="tooth">
+        <rect x="116" y="6" width="24" height="34" rx="4" />
+      </g>
+      <use href="#tooth" transform="rotate(30 128 128)" />
+      <use href="#tooth" transform="rotate(60 128 128)" />
+      <use href="#tooth" transform="rotate(90 128 128)" />
+      <use href="#tooth" transform="rotate(120 128 128)" />
+      <use href="#tooth" transform="rotate(150 128 128)" />
+      <use href="#tooth" transform="rotate(180 128 128)" />
+      <use href="#tooth" transform="rotate(210 128 128)" />
+      <use href="#tooth" transform="rotate(240 128 128)" />
+      <use href="#tooth" transform="rotate(270 128 128)" />
+      <use href="#tooth" transform="rotate(300 128 128)" />
+      <use href="#tooth" transform="rotate(330 128 128)" />
+    </g>
+
+    <circle cx="128" cy="128" r="96" fill="url(#steelDark)" stroke="url(#steel)" stroke-width="5" />
+    <circle cx="128" cy="128" r="77" fill="url(#core)" stroke="url(#edgeBlue)" stroke-width="4" />
+
+    <path
+      d="M98 74h26v53l55-53h34l-66 61 70 77h-35l-58-63v63H98V74z"
+      fill="url(#kMetal)"
+      stroke="#0f93e6"
+      stroke-width="2"
+      paint-order="stroke fill"
+    />
+  </g>
+</svg>

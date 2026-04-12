@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Kinetka HQ Docs
+    url: https://github.com/gitomiko/KinetkaHQ
+    about: Start in the repo documentation if the request is not yet a bug or feature.
