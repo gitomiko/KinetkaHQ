@@ -131,10 +131,11 @@ function setHighlight(groupTitle) {
   highlightGroup = groupTitle;
   const slug = groupTitle ? slugify(groupTitle) : null;
 
-  if (tilesHost) {
-    tilesHost.classList.toggle("is-highlighting", Boolean(slug));
-    tilesHost.querySelectorAll(".tile[data-group]").forEach((tile) => {
-      tile.classList.toggle("tile-highlight", tile.dataset.group === slug);
+  const foldersEl = tilesHost && tilesHost.querySelector(".folders");
+  if (foldersEl) {
+    foldersEl.classList.toggle("is-highlighting", Boolean(slug));
+    foldersEl.querySelectorAll(".folder[data-group]").forEach((folder) => {
+      folder.classList.toggle("folder-highlight", folder.dataset.group === slug);
     });
   }
 
@@ -309,25 +310,22 @@ function safeText(text) {
     .trim();
 }
 
-function makeTile(item, groupTitle) {
+function makeRow(item) {
   const live = item.status === "live";
-  const tile = document.createElement(live ? "a" : "article");
-  tile.className = `tile${live ? "" : " tile-disabled"}`;
-  tile.dataset.group = slugify(groupTitle);
+  const row = document.createElement(live ? "a" : "div");
+  row.className = `folder-row${live ? "" : " row-disabled"}`;
 
   if (live) {
     const targets = resolveTargets(item);
     const defaultHref = targets[0] || item.href || "#";
+    row.href = defaultHref;
+    row.target = "_blank";
+    row.rel = "noopener noreferrer";
 
-    tile.href = defaultHref;
-    tile.target = "_blank";
-    tile.rel = "noopener noreferrer";
-
-    tile.addEventListener("click", (event) => {
+    row.addEventListener("click", (event) => {
       event.preventDefault();
       const popup = window.open("about:blank", "_blank");
       if (popup) popup.opener = null;
-
       pickHref(item).then((target) => {
         const finalTarget = target || defaultHref;
         if (popup && !popup.closed) {
@@ -339,29 +337,62 @@ function makeTile(item, groupTitle) {
     });
   }
 
-  const statusClass = live ? "tile-status-live" : "tile-status-soon";
   const dotClass = live ? "dot-live" : "dot-soon";
+  const statusClass = live ? "row-status-live" : "row-status-soon";
   const statusText = live ? "live" : "soon";
-  const iconHtml = item.logo
-    ? `<img class="tile-icon" src="${item.logo}" alt="" loading="lazy" referrerpolicy="no-referrer" />`
-    : "";
 
-  tile.innerHTML = `
-    <p class="tile-label">${safeText(groupTitle)}</p>
-    <h3 class="tile-name">${safeText(item.name)}</h3>
-    <p class="tile-desc">${safeText(item.description)}</p>
-    <div class="tile-foot">
-      <span class="tile-status ${statusClass}"><i class="dot ${dotClass}"></i>${statusText}</span>
-      ${iconHtml}
-    </div>
-  `;
-
-  const iconEl = tile.querySelector(".tile-icon");
-  if (iconEl) {
-    iconEl.addEventListener("error", () => iconEl.remove(), { once: true });
+  // Icon or text mark fallback
+  const iconEl = document.createElement(item.logo ? "img" : "span");
+  if (item.logo) {
+    iconEl.className = "row-icon";
+    iconEl.src = item.logo;
+    iconEl.alt = "";
+    iconEl.loading = "lazy";
+    iconEl.referrerPolicy = "no-referrer";
+    iconEl.addEventListener("error", () => {
+      const mark = document.createElement("span");
+      mark.className = "row-mark";
+      mark.textContent = item.mark || "";
+      iconEl.replaceWith(mark);
+    }, { once: true });
+  } else {
+    iconEl.className = "row-mark";
+    iconEl.textContent = item.mark || "";
   }
 
-  return tile;
+  const nameEl = document.createElement("span");
+  nameEl.className = "row-name";
+  nameEl.textContent = safeText(item.name);
+
+  const descEl = document.createElement("span");
+  descEl.className = "row-desc";
+  descEl.textContent = safeText(item.description);
+
+  const statusEl = document.createElement("span");
+  statusEl.className = `row-status ${statusClass}`;
+  statusEl.innerHTML = `<i class="dot ${dotClass}"></i>${statusText}`;
+
+  row.append(iconEl, nameEl, descEl, statusEl);
+  return row;
+}
+
+function makeFolder(group) {
+  const folder = document.createElement("details");
+  folder.className = "folder";
+  folder.dataset.group = slugify(group.title);
+  folder.open = true;
+
+  const summary = document.createElement("summary");
+  summary.className = "folder-head";
+  summary.innerHTML = `<span class="folder-arrow">▸</span><span>${safeText(group.title)}</span><span class="folder-count">${group.items.length}</span>`;
+
+  const body = document.createElement("div");
+  body.className = "folder-body";
+  group.items.forEach((item) => body.appendChild(makeRow(item)));
+
+  folder.appendChild(summary);
+  folder.appendChild(body);
+  return folder;
 }
 
 function itemMatches(item, group, keyword) {
@@ -432,42 +463,52 @@ function renderPanel() {
   const keyword = searchQuery.trim().toLowerCase();
 
   if (keyword) {
-    // Search: flat filtered results across all groups
-    const matches = [];
-    let sectionsHit = 0;
-    for (const group of appGroups) {
-      const hits = group.items.filter((item) => itemMatches(item, group, keyword));
-      if (hits.length > 0) sectionsHit += 1;
-      hits.forEach((item) => matches.push({ item, groupTitle: group.title }));
-    }
-
+    // Search: filtered folders, only showing matched rows
     if (panelEyebrow) panelEyebrow.textContent = "RESULTS";
     if (panelTitle) panelTitle.textContent = `Search: ${keyword}`;
+
+    const foldersEl = document.createElement("div");
+    foldersEl.className = "folders";
+
+    let totalMatches = 0;
+    let sectionsHit = 0;
+
+    appGroups.forEach((group) => {
+      const hits = group.items.filter((item) => itemMatches(item, group, keyword));
+      if (hits.length === 0) return;
+      sectionsHit += 1;
+      totalMatches += hits.length;
+
+      const pseudoGroup = { ...group, items: hits };
+      foldersEl.appendChild(makeFolder(pseudoGroup));
+    });
+
     if (panelNote) {
-      panelNote.textContent = matches.length
-        ? `${matches.length} match${matches.length === 1 ? "" : "es"} across ${sectionsHit} section${sectionsHit === 1 ? "" : "s"}.`
+      panelNote.textContent = totalMatches
+        ? `${totalMatches} match${totalMatches === 1 ? "" : "es"} across ${sectionsHit} section${sectionsHit === 1 ? "" : "s"}.`
         : "";
     }
 
-    if (matches.length === 0) {
+    if (totalMatches === 0) {
       const empty = document.createElement("div");
       empty.className = "empty";
       empty.textContent = "no results.";
       tilesHost.appendChild(empty);
     } else {
-      matches.forEach(({ item, groupTitle }) => tilesHost.appendChild(makeTile(item, groupTitle)));
+      tilesHost.appendChild(foldersEl);
     }
     return;
   }
 
-  // Portal: all groups, all items — highlight driven by hover, not panel swap
+  // Portal: all groups as folders, highlight driven by sidebar hover
   if (panelEyebrow) panelEyebrow.textContent = "PORTAL";
   if (panelTitle) panelTitle.textContent = "All Services";
   if (panelNote) panelNote.textContent = "Hover a section to highlight its services.";
 
-  appGroups.forEach((group) => {
-    group.items.forEach((item) => tilesHost.appendChild(makeTile(item, group.title)));
-  });
+  const foldersEl = document.createElement("div");
+  foldersEl.className = "folders";
+  appGroups.forEach((group) => foldersEl.appendChild(makeFolder(group)));
+  tilesHost.appendChild(foldersEl);
 
   // Re-apply any active highlight after re-render
   setHighlight(highlightGroup);

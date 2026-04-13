@@ -423,147 +423,168 @@ body {
   max-width: 62ch;
 }
 
-/* ─── Tile grid ──────────────────────────────────────────────── */
+/* ─── Folder list (portal view) ─────────────────────────────── */
 
-.tiles {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr));
-  gap: 0.7rem;
-}
-
-.tile {
-  position: relative;
+.folders {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-  border: 1px solid var(--card-border);
-  border-radius: 6px;
-  padding: 0.85rem 0.95rem 0.75rem;
-  background: var(--panel-strong);
-  color: inherit;
-  text-decoration: none;
-  min-height: 132px;
-  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
 }
 
-.tile::before {
-  content: "";
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  width: 5px;
-  height: 5px;
-  border-radius: 999px;
-  background: var(--accent-a);
-  opacity: 0;
-  transition: opacity 150ms ease;
+.folder {
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  overflow: hidden;
+  transition: opacity 200ms ease, filter 200ms ease, border-color 200ms ease;
 }
 
-.tile:hover {
-  transform: translateY(-1px);
-  border-color: var(--card-hover-border);
-  box-shadow: var(--card-hover-shadow);
-}
-
-.tile:hover::before {
-  opacity: 1;
-}
-
-.tile-label {
-  margin: 0;
-  font-family: "DM Mono", "Consolas", monospace;
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
-  color: var(--ink-mute);
-  text-transform: uppercase;
-  padding-left: 0.8rem;
-}
-
-.tile-name {
-  margin: 0;
-  font-family: "Syne", "Segoe UI", sans-serif;
-  font-weight: 700;
-  font-size: 0.98rem;
-  color: var(--ink);
-}
-
-.tile-desc {
-  margin: 0;
-  font-size: 0.82rem;
-  color: var(--ink-soft);
-  flex: 1;
-}
-
-.tile-foot {
+.folder-head {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 0.55rem;
+  padding: 0.52rem 0.75rem;
+  cursor: pointer;
+  list-style: none;
   font-family: "DM Mono", "Consolas", monospace;
   font-size: 0.68rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--ink-mute);
-  margin-top: 0.35rem;
+  user-select: none;
 }
 
-.tile-status {
+.folder-head::-webkit-details-marker {
+  display: none;
+}
+
+.folder-arrow {
+  font-size: 0.55rem;
+  transition: rotate 150ms ease;
+  color: var(--ink-mute);
+  display: inline-block;
+}
+
+.folder[open] .folder-arrow {
+  rotate: 90deg;
+}
+
+.folder-count {
+  margin-left: auto;
+  color: var(--ink-mute);
+  font-size: 0.64rem;
+}
+
+.folder-body {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--line);
+}
+
+/* ─── Folder rows (each service) ─────────────────────────────── */
+
+.folder-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.46rem 0.75rem;
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1px solid transparent;
+  transition: background 120ms ease;
+  min-width: 0;
+}
+
+.folder-row + .folder-row {
+  border-top: 1px solid var(--line);
+}
+
+.folder-row:hover {
+  background: var(--nav-hover);
+}
+
+.row-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  object-fit: contain;
+  opacity: 0.72;
+  border-radius: 3px;
+}
+
+.row-mark {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  display: grid;
+  place-content: center;
+  font-family: "DM Mono", monospace;
+  font-size: 0.52rem;
+  font-weight: 500;
+  color: var(--ink-mute);
+  background: var(--card-border);
+  border-radius: 3px;
+  letter-spacing: 0;
+}
+
+.row-name {
+  font-family: "Syne", "Segoe UI", sans-serif;
+  font-weight: 600;
+  font-size: 0.84rem;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 120px;
+  max-width: 180px;
+}
+
+.row-desc {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.row-status {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
+  font-family: "DM Mono", "Consolas", monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
 }
 
-.tile-status-live {
-  color: var(--live);
-}
+.row-status-live { color: var(--live); }
+.row-status-soon { color: var(--soon); }
 
-.tile-status-soon {
-  color: var(--soon);
-}
-
-.tile-icon {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
-  opacity: 0.7;
-  filter: grayscale(0.3);
-}
-
-/* ─── Tile highlight state (triggered by sidebar hover) ─────── */
-
-.tiles.is-highlighting .tile {
-  opacity: 0.22;
-  filter: grayscale(0.6);
-  transform: none;
-  border-color: var(--card-border);
-  box-shadow: none;
-}
-
-.tiles.is-highlighting .tile.tile-highlight {
-  opacity: 1;
-  filter: none;
-  border-color: var(--accent-a);
-  box-shadow: 0 0 0 1px var(--accent-a), var(--card-hover-shadow);
-  transform: translateY(-1px);
-}
-
-.tiles.is-highlighting .tile.tile-highlight::before {
-  opacity: 1;
-}
-
-/* ─── Tile disabled state ────────────────────────────────────── */
-
-.tile-disabled {
-  opacity: 0.55;
+.row-disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-.tile-disabled:hover {
-  transform: none;
-  border-color: var(--card-border);
-  box-shadow: none;
+/* ─── Folder highlight state (sidebar hover) ─────────────────── */
+
+.folders.is-highlighting .folder {
+  opacity: 0.18;
+  filter: grayscale(0.55);
 }
 
-.tile-disabled:hover::before {
-  opacity: 0;
+.folders.is-highlighting .folder.folder-highlight {
+  opacity: 1;
+  filter: none;
+  border-color: var(--accent-a);
+}
+
+.folders.is-highlighting .folder.folder-highlight .folder-head {
+  color: var(--accent-a);
+}
+
+.folders.is-highlighting .folder.folder-highlight .folder-arrow {
+  color: var(--accent-a);
 }
 
 /* ─── Empty state ────────────────────────────────────────────── */
@@ -701,14 +722,13 @@ body {
     margin-bottom: 1rem;
   }
 
-  /* Tiles: 2 columns on wide mobile, 1 on narrow */
-  .tiles {
-    grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr));
-    gap: 0.55rem;
+  /* Folder rows: hide description on narrow screens */
+  .row-desc {
+    display: none;
   }
 
-  .tile {
-    min-height: 110px;
-    padding: 0.7rem 0.75rem 0.65rem;
+  .row-name {
+    max-width: none;
+    flex: 1;
   }
 }
