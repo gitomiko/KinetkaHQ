@@ -399,7 +399,7 @@ function makeRow(item) {
   statusEl.className = `row-status ${statusClass}`;
   statusEl.innerHTML = `<i class="dot ${dotClass}"></i>${statusText}`;
 
-  row.append(iconEl, nameEl, domainEl, descEl, statusEl);
+  row.append(iconEl, nameEl, descEl, statusEl, domainEl);
   return row;
 }
 
