@@ -96,6 +96,54 @@ const DEFAULT_PORTAL_CONFIG = {
         },
       ],
     },
+    {
+      title: "Portal",
+      note: "All services, one place.",
+      items: [
+        {
+          name: "Admin Console",
+          description: "Control surface for operational workflows.",
+          href: "https://example.com/admin-console",
+          mark: "AC",
+          status: "live",
+        },
+        {
+          name: "Identity",
+          description: "Authentication and access entry point.",
+          href: "https://example.com/identity",
+          mark: "ID",
+          status: "live",
+        },
+        {
+          name: "Files",
+          description: "Document and file workspace.",
+          href: "https://example.com/files",
+          mark: "FL",
+          status: "live",
+        },
+        {
+          name: "Photos",
+          description: "Media gallery and album management.",
+          href: "https://example.com/photos",
+          mark: "PH",
+          status: "live",
+        },
+        {
+          name: "Automations",
+          description: "Workflow and job launcher.",
+          href: "https://example.com/automations",
+          mark: "AU",
+          status: "live",
+        },
+        {
+          name: "Observability",
+          description: "Metrics and status dashboard.",
+          href: "https://example.com/observability",
+          mark: "OB",
+          status: "live",
+        },
+      ],
+    },
   ],
 };
 
