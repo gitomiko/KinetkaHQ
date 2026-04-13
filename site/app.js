@@ -529,7 +529,7 @@ function renderPanel() {
 
   // Portal: all groups as folders, highlight driven by sidebar hover
   if (panelEyebrow) panelEyebrow.textContent = "PORTAL";
-  if (panelTitle) panelTitle.textContent = "All Services";
+  if (panelTitle) panelTitle.textContent = "System Overview";
   if (panelNote) panelNote.textContent = "Hover a section to highlight its services.";
 
   const foldersEl = document.createElement("div");
