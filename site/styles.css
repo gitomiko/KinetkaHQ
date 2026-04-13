@@ -574,7 +574,7 @@ body {
 .row-status {
   display: inline-flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 0.3rem;
   font-family: "DM Mono", "Consolas", monospace;
   font-size: 0.64rem;
