@@ -96,54 +96,6 @@ const DEFAULT_PORTAL_CONFIG = {
         },
       ],
     },
-    {
-      title: "Portal",
-      note: "All services, one place.",
-      items: [
-        {
-          name: "Admin Console",
-          description: "Control surface for operational workflows.",
-          href: "https://example.com/admin-console",
-          mark: "AC",
-          status: "live",
-        },
-        {
-          name: "Identity",
-          description: "Authentication and access entry point.",
-          href: "https://example.com/identity",
-          mark: "ID",
-          status: "live",
-        },
-        {
-          name: "Files",
-          description: "Document and file workspace.",
-          href: "https://example.com/files",
-          mark: "FL",
-          status: "live",
-        },
-        {
-          name: "Photos",
-          description: "Media gallery and album management.",
-          href: "https://example.com/photos",
-          mark: "PH",
-          status: "live",
-        },
-        {
-          name: "Automations",
-          description: "Workflow and job launcher.",
-          href: "https://example.com/automations",
-          mark: "AU",
-          status: "live",
-        },
-        {
-          name: "Observability",
-          description: "Metrics and status dashboard.",
-          href: "https://example.com/observability",
-          mark: "OB",
-          status: "live",
-        },
-      ],
-    },
   ],
 };
 
@@ -156,6 +108,7 @@ const tilesHost = document.getElementById("tiles");
 const panelEyebrow = document.getElementById("panelEyebrow");
 const panelTitle = document.getElementById("panelTitle");
 const panelNote = document.getElementById("panelNote");
+const topBrand = document.getElementById("topBrand");
 const searchInput = document.getElementById("searchInput");
 const clock = document.getElementById("clock");
 const themeToggle = document.getElementById("themeToggle");
@@ -167,8 +120,38 @@ const liveCount = document.getElementById("liveCount");
 const hostLabel = document.getElementById("hostLabel");
 const descriptionMeta = document.querySelector('meta[name="description"]');
 
-let selectedGroupIndex = 0;
+let highlightGroup = null; // group title being highlighted, or null = portal (all)
 let searchQuery = "";
+
+function slugify(str) {
+  return (str || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+function setHighlight(groupTitle) {
+  highlightGroup = groupTitle;
+  const slug = groupTitle ? slugify(groupTitle) : null;
+
+  if (tilesHost) {
+    tilesHost.classList.toggle("is-highlighting", Boolean(slug));
+    tilesHost.querySelectorAll(".tile[data-group]").forEach((tile) => {
+      tile.classList.toggle("tile-highlight", tile.dataset.group === slug);
+    });
+  }
+
+  if (navList) {
+    navList.querySelectorAll(".nav-item").forEach((btn) => {
+      const isPortal = btn.dataset.portal === "true";
+      const isMatch = !isPortal && btn.dataset.group === slug;
+      btn.setAttribute("aria-selected", (slug ? isMatch : isPortal) ? "true" : "false");
+    });
+  }
+
+  if (topBrand) {
+    topBrand.textContent = groupTitle
+      ? `kinetika hq · ${safeText(groupTitle).toLowerCase()}`
+      : "kinetika hq · portal";
+  }
+}
 const THEME_STORAGE_KEY = "kinetika-hq-theme";
 const darkMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
@@ -330,6 +313,7 @@ function makeTile(item, groupTitle) {
   const live = item.status === "live";
   const tile = document.createElement(live ? "a" : "article");
   tile.className = `tile${live ? "" : " tile-disabled"}`;
+  tile.dataset.group = slugify(groupTitle);
 
   if (live) {
     const targets = resolveTargets(item);
@@ -356,8 +340,8 @@ function makeTile(item, groupTitle) {
   }
 
   const statusClass = live ? "tile-status-live" : "tile-status-soon";
-  const statusText = live ? "live" : "soon";
   const dotClass = live ? "dot-live" : "dot-soon";
+  const statusText = live ? "live" : "soon";
   const iconHtml = item.logo
     ? `<img class="tile-icon" src="${item.logo}" alt="" loading="lazy" referrerpolicy="no-referrer" />`
     : "";
@@ -397,37 +381,49 @@ function renderSidebar() {
   if (!navList) return;
   navList.innerHTML = "";
 
-  appGroups.forEach((group, i) => {
+  // Portal — synthetic "show all, no highlight" item
+  const portalLi = document.createElement("li");
+  const portalBtn = document.createElement("button");
+  portalBtn.type = "button";
+  portalBtn.className = "nav-item";
+  portalBtn.setAttribute("role", "tab");
+  portalBtn.setAttribute("aria-selected", !highlightGroup ? "true" : "false");
+  portalBtn.dataset.portal = "true";
+
+  const portalLabel = document.createElement("span");
+  portalLabel.textContent = "Portal";
+  const portalCount = document.createElement("span");
+  portalCount.className = "nav-count";
+  portalCount.textContent = String(appGroups.reduce((n, g) => n + g.items.length, 0));
+
+  portalBtn.appendChild(portalLabel);
+  portalBtn.appendChild(portalCount);
+  portalBtn.addEventListener("mouseenter", () => setHighlight(null));
+  portalLi.appendChild(portalBtn);
+  navList.appendChild(portalLi);
+
+  // Group items
+  appGroups.forEach((group) => {
     const li = document.createElement("li");
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "nav-item";
     btn.setAttribute("role", "tab");
-    btn.setAttribute(
-      "aria-selected",
-      !searchQuery && i === selectedGroupIndex ? "true" : "false",
-    );
-    btn.disabled = Boolean(searchQuery);
-    btn.addEventListener("click", () => selectGroup(i));
+    btn.setAttribute("aria-selected", highlightGroup === group.title ? "true" : "false");
+    btn.dataset.group = slugify(group.title);
 
-    const title = document.createElement("span");
-    title.textContent = safeText(group.title) || "—";
-
+    const label = document.createElement("span");
+    label.textContent = safeText(group.title) || "—";
     const count = document.createElement("span");
     count.className = "nav-count";
     count.textContent = String(group.items.length);
 
-    btn.appendChild(title);
+    btn.appendChild(label);
     btn.appendChild(count);
+    btn.addEventListener("mouseenter", () => setHighlight(group.title));
     li.appendChild(btn);
     navList.appendChild(li);
   });
-}
-
-function selectGroup(i) {
-  selectedGroupIndex = i;
-  renderSidebar();
-  renderPanel();
 }
 
 function renderPanel() {
@@ -436,6 +432,7 @@ function renderPanel() {
   const keyword = searchQuery.trim().toLowerCase();
 
   if (keyword) {
+    // Search: flat filtered results across all groups
     const matches = [];
     let sectionsHit = 0;
     for (const group of appGroups) {
@@ -457,25 +454,23 @@ function renderPanel() {
       empty.className = "empty";
       empty.textContent = "no results.";
       tilesHost.appendChild(empty);
-      return;
+    } else {
+      matches.forEach(({ item, groupTitle }) => tilesHost.appendChild(makeTile(item, groupTitle)));
     }
-
-    matches.forEach(({ item, groupTitle }) => {
-      tilesHost.appendChild(makeTile(item, groupTitle));
-    });
     return;
   }
 
-  const group = appGroups[selectedGroupIndex] || appGroups[0];
-  if (!group) return;
+  // Portal: all groups, all items — highlight driven by hover, not panel swap
+  if (panelEyebrow) panelEyebrow.textContent = "PORTAL";
+  if (panelTitle) panelTitle.textContent = "All Services";
+  if (panelNote) panelNote.textContent = "Hover a section to highlight its services.";
 
-  if (panelEyebrow) panelEyebrow.textContent = "SECTION";
-  if (panelTitle) panelTitle.textContent = safeText(group.title) || "—";
-  if (panelNote) panelNote.textContent = safeText(group.note) || "";
-
-  group.items.forEach((item) => {
-    tilesHost.appendChild(makeTile(item, group.title));
+  appGroups.forEach((group) => {
+    group.items.forEach((item) => tilesHost.appendChild(makeTile(item, group.title)));
   });
+
+  // Re-apply any active highlight after re-render
+  setHighlight(highlightGroup);
 }
 
 function updateLiveCount() {
@@ -578,6 +573,11 @@ async function bootstrap() {
   updateLiveCount();
   renderSidebar();
   renderPanel();
+
+  // Single mouseleave on the sidebar to reset highlight when cursor leaves the nav
+  const sidebar = document.querySelector(".sidebar");
+  if (sidebar) sidebar.addEventListener("mouseleave", () => setHighlight(null));
+
   tickClock();
   setInterval(tickClock, 1000);
 }
