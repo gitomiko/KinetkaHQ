@@ -320,6 +320,18 @@ function safeText(text) {
     .trim();
 }
 
+function resolveDisplayDomain(item) {
+  const candidates = [item.publicHref, item.href, item.homeHref];
+  for (const url of candidates) {
+    if (!url) continue;
+    try {
+      const { hostname } = new URL(url);
+      if (!isIpv4Host(hostname)) return hostname;
+    } catch { /* skip */ }
+  }
+  return "";
+}
+
 function makeRow(item) {
   const live = item.status === "live";
   const row = document.createElement(live ? "a" : "div");
@@ -374,6 +386,11 @@ function makeRow(item) {
   nameEl.className = "row-name";
   nameEl.textContent = safeText(item.name);
 
+  const domain = resolveDisplayDomain(item);
+  const domainEl = document.createElement("span");
+  domainEl.className = "row-domain";
+  domainEl.textContent = domain;
+
   const descEl = document.createElement("span");
   descEl.className = "row-desc";
   descEl.textContent = safeText(item.description);
@@ -382,7 +399,7 @@ function makeRow(item) {
   statusEl.className = `row-status ${statusClass}`;
   statusEl.innerHTML = `<i class="dot ${dotClass}"></i>${statusText}`;
 
-  row.append(iconEl, nameEl, descEl, statusEl);
+  row.append(iconEl, nameEl, domainEl, descEl, statusEl);
   return row;
 }
 

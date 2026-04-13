@@ -549,6 +549,18 @@ body {
   max-width: 180px;
 }
 
+.row-domain {
+  font-family: "DM Mono", "Consolas", monospace;
+  font-size: 0.70rem;
+  color: var(--ink-mute);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+  min-width: 80px;
+  max-width: 200px;
+}
+
 .row-desc {
   font-size: 0.78rem;
   color: var(--ink-soft);
@@ -788,7 +800,8 @@ body {
     margin-bottom: 1rem;
   }
 
-  /* Folder rows: hide description on narrow screens */
+  /* Folder rows: hide domain and description on narrow screens */
+  .row-domain,
   .row-desc {
     display: none;
   }
