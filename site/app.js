@@ -119,6 +119,7 @@ const footerVersion = document.getElementById("footerVersion");
 const liveCount = document.getElementById("liveCount");
 const hostLabel = document.getElementById("hostLabel");
 const datePill = document.getElementById("datePill");
+const sidebarOverviewTitle = document.getElementById("sidebarOverviewTitle");
 const descriptionMeta = document.querySelector('meta[name="description"]');
 
 let highlightGroup = null; // group title being highlighted, or null = portal (all)
@@ -152,6 +153,11 @@ function setHighlight(groupTitle) {
     topBrand.textContent = groupTitle
       ? `kinetika hq · ${safeText(groupTitle).toLowerCase()}`
       : "kinetika hq · portal";
+  }
+  if (sidebarOverviewTitle) {
+    sidebarOverviewTitle.textContent = groupTitle
+      ? safeText(groupTitle)
+      : "System Overview";
   }
 }
 const THEME_STORAGE_KEY = "kinetika-hq-theme";
