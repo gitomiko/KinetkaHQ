@@ -118,6 +118,7 @@ const modePill = document.getElementById("modePill");
 const footerVersion = document.getElementById("footerVersion");
 const liveCount = document.getElementById("liveCount");
 const hostLabel = document.getElementById("hostLabel");
+const datePill = document.getElementById("datePill");
 const descriptionMeta = document.querySelector('meta[name="description"]');
 
 let highlightGroup = null; // group title being highlighted, or null = portal (all)
@@ -194,6 +195,15 @@ function formatNow() {
     minute: "2-digit",
     second: "2-digit",
     hour12: false,
+  }).format(now);
+}
+
+function formatDate() {
+  const now = new Date();
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
   }).format(now);
 }
 
@@ -524,7 +534,8 @@ function updateLiveCount() {
 }
 
 function tickClock() {
-  clock.textContent = formatNow();
+  if (clock) clock.textContent = formatNow();
+  if (datePill) datePill.textContent = formatDate();
 }
 
 function applyShell(shell) {
@@ -595,11 +606,7 @@ const handleSystemThemeChange = () => {
   applyTheme(systemTheme());
 };
 
-if (typeof darkMediaQuery.addEventListener === "function") {
-  darkMediaQuery.addEventListener("change", handleSystemThemeChange);
-} else if (typeof darkMediaQuery.addListener === "function") {
-  darkMediaQuery.addListener(handleSystemThemeChange);
-}
+darkMediaQuery.addEventListener("change", handleSystemThemeChange);
 
 async function bootstrap() {
   await loadLocalConfig();

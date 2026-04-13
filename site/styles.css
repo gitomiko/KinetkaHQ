@@ -226,6 +226,17 @@ body {
   color: var(--ink-mute);
 }
 
+.chrome-center {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--ink-soft);
+}
+
+.chrome-date {
+  color: var(--ink-mute);
+}
+
 .chrome-right-text {
   color: var(--ink-mute);
 }
@@ -585,6 +596,61 @@ body {
 
 .folders.is-highlighting .folder.folder-highlight .folder-arrow {
   color: var(--accent-a);
+}
+
+/* ─── Desktop: card-style rows ──────────────────────────────── */
+
+@media (min-width: 721px) {
+  .folder-body {
+    gap: 0.4rem;
+    padding: 0.5rem;
+    border-top: none;
+    background: transparent;
+  }
+
+  .folder-row {
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    padding: 0.62rem 0.9rem;
+    background: var(--panel-strong);
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+  }
+
+  .folder-row + .folder-row {
+    border-top: 1px solid var(--card-border);
+  }
+
+  .folder-row:hover {
+    border-color: var(--card-hover-border);
+    box-shadow: var(--card-hover-shadow);
+    background: var(--panel-strong);
+  }
+
+  .row-icon,
+  .row-mark {
+    width: 20px;
+    height: 20px;
+  }
+
+  .row-mark {
+    font-size: 0.58rem;
+  }
+
+  .row-name {
+    font-size: 0.88rem;
+    min-width: 140px;
+    max-width: 200px;
+  }
+
+  /* Highlighted folder: tint individual card borders too */
+  .folders.is-highlighting .folder.folder-highlight .folder-row {
+    border-color: rgba(140, 106, 58, 0.3);
+  }
+
+  .folders.is-highlighting .folder.folder-highlight .folder-row:hover {
+    border-color: var(--accent-a);
+    box-shadow: var(--card-hover-shadow);
+  }
 }
 
 /* ─── Empty state ────────────────────────────────────────────── */

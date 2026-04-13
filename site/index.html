@@ -8,9 +8,9 @@
       name="description"
       content="Kinetika HQ portal template for internal tool launch and navigation."
     />
-    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20260412j" />
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico?v=20260412j" />
-    <link rel="shortcut icon" href="assets/favicon.ico?v=20260412j" />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20260412k" />
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico?v=20260412k" />
+    <link rel="shortcut icon" href="assets/favicon.ico?v=20260412k" />
     <meta
       name="theme-color"
       media="(prefers-color-scheme: light)"
@@ -21,8 +21,8 @@
       media="(prefers-color-scheme: dark)"
       content="#1c1c1b"
     />
-    <link rel="stylesheet" href="styles.css?v=20260412j" />
-    <script defer src="app.js?v=20260412j"></script>
+    <link rel="stylesheet" href="styles.css?v=20260412k" />
+    <script defer src="app.js?v=20260412k"></script>
   </head>
   <body>
     <main class="shell">
@@ -31,7 +31,6 @@
         <span class="chrome-brand" id="topBrand">kinetika hq · portal</span>
         <span class="chrome-right">
           <span class="chrome-status"><i class="dot dot-live"></i><span id="liveCount">0</span> live</span>
-          <span id="clock" class="chrome-clock">--:--:--</span>
           <span id="hostLabel" class="chrome-host"></span>
           <button id="themeToggle" class="chrome-toggle" type="button">// dark</button>
         </span>
@@ -73,7 +72,12 @@
           <span class="chrome-sep">·</span>
           <span id="modePill">HQ Portal</span>
         </span>
-        <span id="footerVersion" class="chrome-right-text">kinetika hq v1.0</span>
+        <span class="chrome-center">
+          <span id="clock" class="chrome-clock">--:--:--</span>
+          <span class="chrome-sep">|</span>
+          <span id="datePill" class="chrome-date">-- --- ----</span>
+        </span>
+        <span id="footerVersion" class="chrome-right-text">kinetika hq</span>
       </footer>
     </main>
   </body>
